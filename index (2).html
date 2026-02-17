@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITIP - KPI Tracking Platform v2.0</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@400;500;600&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Work Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #0f172a 100%);
+      min-height: 100vh;
+    }
+    
+    .heading {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .gold-text {
+      background: linear-gradient(135deg, #D4AF37 0%, #F9D77E 50%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .glass {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 1rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #D4AF37 0%, #F9D77E 100%);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .input-field, .textarea-field, .select-field {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: white;
+      transition: all 0.3s ease;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      width: 100%;
+    }
+
+    .textarea-field {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .input-field:focus, .textarea-field:focus, .select-field:focus {
+      outline: none;
+      border-color: #D4AF37;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .select-field option {
+      background: #1e293b;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #1e293b;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    .btn-danger {
+      background: rgba(127, 29, 29, 0.8);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-danger:hover {
+      background: rgba(153, 27, 27, 1);
+    }
+
+    .btn-success {
+      background: rgba(21, 128, 61, 0.8);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-success:hover {
+      background: rgba(22, 163, 74, 1);
+    }
+
+    .progress-bar {
+      height: 0.75rem;
+      background: #1e293b;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      transition: width 0.5s ease;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .gap-2 { gap: 0.5rem; }
+    .gap-4 { gap: 1rem; }
+
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+
+    .text-sm { font-size: 0.875rem; }
+    .text-xs { font-size: 0.75rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-4xl { font-size: 2.25rem; }
+
+    .text-white { color: white; }
+    .text-emerald { color: #34d399; }
+    .text-slate { color: #94a3b8; }
+    .text-center { text-align: center; }
+
+    .hidden { display: none; }
+
+    .checkbox {
+      width: 1.25rem;
+      height: 1.25rem;
+      accent-color: #10b981;
+      cursor: pointer;
+    }
+
+    .role-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #1e293b;
+      color: #94a3b8;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .role-badge.active {
+      background: #059669;
+      color: white;
+    }
+
+    .role-badge:hover {
+      background: #334155;
+    }
+
+    .kpi-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s;
+    }
+
+    .kpi-item:hover {
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    .kpi-item.completed {
+      opacity: 0.6;
+    }
+
+    .kpi-item.completed .kpi-text {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+
+    .remark-item {
+      background: rgba(30, 41, 59, 0.5);
+      border-left: 4px solid #10b981;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .staff-card {
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .staff-card:hover {
+      border-color: #10b981;
+      transform: translateY(-2px);
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #10b981, transparent);
+      margin: 1rem 0;
+    }
+
+    .tab-button {
+      padding: 0.5rem 1rem;
+      background: #1e293b;
+      color: #94a3b8;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: all 0.3s;
+    }
+
+    .tab-button.active {
+      background: #059669;
+      color: white;
+    }
+
+    .tab-button:hover {
+      background: #334155;
+    }
+
+    .counter-input {
+      width: 60px;
+      text-align: center;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: white;
+      border-radius: 0.25rem;
+      padding: 0.25rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-recurring {
+      background: rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+
+    .badge-oneoff {
+      background: rgba(168, 85, 247, 0.3);
+      color: #c084fc;
+    }
+
+    .badge-overdue {
+      background: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .modal-content {
+      background: #1e293b;
+      border: 2px solid #D4AF37;
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- SheetJS for Excel generation -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ============================================================
+    // DATA & CONFIGURATION
+    // ============================================================
+
+    const INITIAL_STAFF_DATA = [
+      { id: "1", name: "Jerry", roles: ["Copywriter"], password: "123456" },
+      { id: "2", name: "Victor", roles: ["Digital Analyst"], password: "123456" },
+      { id: "3", name: "Nathaniel", roles: ["Digital Marketer (Meta Ads & SEO)"], password: "123456" },
+      { id: "4", name: "Blessing", roles: ["Social Media Marketer"], password: "123456" },
+      { id: "5", name: "Esther", roles: ["Social Media Marketer"], password: "123456" },
+      { id: "6", name: "Chucks", roles: ["Graphic Designer"], password: "123456" },
+      { id: "7", name: "Divine", roles: ["Graphic Designer"], password: "123456" },
+      { id: "8", name: "Courage", roles: ["Video Editor"], password: "123456" },
+      { id: "9", name: "Emmanuel", roles: ["Video Editor"], password: "123456" },
+      { id: "10", name: "Precious", roles: ["Video Editor"], password: "123456" },
+      { id: "11", name: "Benjamin", roles: ["Video Editor"], password: "123456" },
+      { id: "12", name: "Henry", roles: ["Video Editor"], password: "123456" },
+    ];
+
+    const DEFAULT_KPIS_BY_ROLE = {
+      "Copywriter": [
+        { text: "Write 2 pieces of copy daily", type: "recurring", target: 2 },
+        { text: "Submit drafts for review by 4PM", type: "recurring" },
+        { text: "Revise copy within 24hrs of feedback", type: "recurring" },
+        { text: "Research competitor messaging", type: "recurring", target: 3 },
+      ],
+      "Digital Analyst": [
+        { text: "Pull and analyze performance data daily", type: "recurring" },
+        { text: "Create insights report", type: "oneoff", dueDate: null },
+        { text: "Update tracking dashboards by EOD", type: "recurring" },
+      ],
+      "Digital Marketer (Meta Ads & SEO)": [
+        { text: "Launch or optimize 1 Meta ad campaign", type: "recurring" },
+        { text: "Conduct keyword research", type: "recurring" },
+        { text: "Monitor ad spend and ROAS", type: "recurring" },
+        { text: "A/B test ad creatives", type: "recurring", target: 2 },
+      ],
+      "Social Media Marketer": [
+        { text: "Post content pieces", type: "recurring", target: 3 },
+        { text: "Engage with comments/DMs within 2 hours", type: "recurring" },
+        { text: "Schedule next day's content by 6PM", type: "recurring" },
+        { text: "Analyze engagement metrics", type: "oneoff", dueDate: null },
+      ],
+      "Graphic Designer": [
+        { text: "Design social media graphics", type: "recurring", target: 3 },
+        { text: "Submit designs for review by 3PM", type: "recurring" },
+        { text: "Revise designs within 24hrs", type: "recurring" },
+        { text: "Update brand asset library", type: "oneoff", dueDate: null },
+      ],
+      "Video Editor": [
+        { text: "Edit short-form videos", type: "recurring", target: 2 },
+        { text: "Submit rough cuts by 4PM", type: "recurring" },
+        { text: "Finalize and export approved videos", type: "recurring" },
+        { text: "Archive project files", type: "recurring" },
+      ],
+    };
+
+    const SUPERVISOR_PASSWORD = "Vivera2025";
+    const STORAGE_KEY = "citip_kpi_data_v2";
+
+    // ============================================================
+    // UTILITY FUNCTIONS
+    // ============================================================
+
+    const getTodayKey = () => {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    };
+
+    const getDateFromKey = (key) => {
+      const [year, month, day] = key.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    };
+
+    const isOverdue = (dueDate) => {
+      if (!dueDate) return false;
+      return new Date(dueDate) < new Date(getTodayKey());
+    };
+
+    const loadData = () => {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return stored ? JSON.parse(stored) : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const saveData = (data) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.error("Failed to save data:", e);
+        alert("Warning: Changes may not be saved. Your browser storage might be full.");
+      }
+    };
+
+    const exportDataAsJSON = (data) => {
+      const dataStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `citip-backup-${getTodayKey()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    const generateExcelReport = (staff, kpis, dailyProgress, history, scores, remarks, timeRange, selectedStaffIds) => {
+      const wb = XLSX.utils.book_new();
+      const dates = [];
+      const days = timeRange === "daily" ? 1 : timeRange === "weekly" ? 7 : 30;
+      
+      for (let i = 0; i < days; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        dates.push(key);
+      }
+
+      const reportData = [];
+      
+      staff.filter(s => selectedStaffIds.includes(s.id)).forEach(person => {
+        dates.forEach(date => {
+          const dayData = date === getTodayKey() ? dailyProgress : (history[date] || {});
+          
+          person.roles.forEach(role => {
+            const roleKpis = kpis[person.id]?.[role] || [];
+            let totalKpis = 0;
+            let completedKpis = 0;
+
+            roleKpis.forEach((kpi, i) => {
+              const key = `${person.id}-${role}-${i}`;
+              totalKpis++;
+              if (dayData[key]) {
+                completedKpis++;
+              }
+            });
+
+            const completion = totalKpis > 0 ? Math.round((completedKpis / totalKpis) * 100) : 0;
+            const score = scores[person.id]?.[date] || "N/A";
+            const dayRemarks = (remarks[person.id] || []).filter(r => r.date === date).map(r => r.text).join("; ");
+
+            reportData.push({
+              Date: date,
+              Name: person.name,
+              Role: role,
+              "KPIs Completed": `${completedKpis}/${totalKpis}`,
+              "Completion %": `${completion}%`,
+              Score: score,
+              Remarks: dayRemarks || "None"
+            });
+          });
+        });
+      });
+
+      const ws = XLSX.utils.json_to_sheet(reportData);
+      XLSX.utils.book_append_sheet(wb, ws, `${timeRange.toUpperCase()} Report`);
+      XLSX.writeFile(wb, `CITIP-Report-${timeRange}-${getTodayKey()}.xlsx`);
+    };
+
+    // ============================================================
+    // MAIN APP
+    // ============================================================
+
+    function App() {
+      const [view, setView] = useState("login");
+      const [currentUser, setCurrentUser] = useState(null);
+      const [activeRole, setActiveRole] = useState(null);
+      
+      const [staff, setStaff] = useState([]);
+      const [kpis, setKpis] = useState({});
+      const [dailyProgress, setDailyProgress] = useState({});
+      const [history, setHistory] = useState({});
+      const [scores, setScores] = useState({});
+      const [remarks, setRemarks] = useState({});
+      const [deletedStaff, setDeletedStaff] = useState([]);
+
+      // Initialize data
+      useEffect(() => {
+        const stored = loadData();
+        if (stored) {
+          setStaff(stored.staff || INITIAL_STAFF_DATA);
+          setKpis(stored.kpis || {});
+          setDailyProgress(stored.dailyProgress || {});
+          setHistory(stored.history || {});
+          setScores(stored.scores || {});
+          setRemarks(stored.remarks || {});
+          setDeletedStaff(stored.deletedStaff || []);
+        } else {
+          // First launch - initialize with defaults
+          const initialKpis = {};
+          INITIAL_STAFF_DATA.forEach((s) => {
+            initialKpis[s.id] = {};
+            s.roles.forEach((role) => {
+              initialKpis[s.id][role] = DEFAULT_KPIS_BY_ROLE[role] || [];
+            });
+          });
+          setStaff(INITIAL_STAFF_DATA);
+          setKpis(initialKpis);
+        }
+      }, []);
+
+      // Auto-save
+      useEffect(() => {
+        if (staff.length > 0) {
+          saveData({ staff, kpis, dailyProgress, history, scores, remarks, deletedStaff, lastResetDate: getTodayKey() });
+        }
+      }, [staff, kpis, dailyProgress, history, scores, remarks, deletedStaff]);
+
+      // Reset at midnight
+      useEffect(() => {
+        const checkMidnight = () => {
+          const today = getTodayKey();
+          const storedData = loadData();
+          const lastDate = storedData?.lastResetDate;
+          
+          if (lastDate && lastDate !== today) {
+            if (storedData?.dailyProgress && Object.keys(storedData.dailyProgress).length > 0) {
+              setHistory((prev) => ({
+                ...prev,
+                [lastDate]: { ...storedData.dailyProgress },
+              }));
+            }
+            setDailyProgress({});
+          }
+        };
+
+        checkMidnight();
+        const interval = setInterval(checkMidnight, 60000);
+        return () => clearInterval(interval);
+      }, []);
+
+      const handleLogin = (type, credentials) => {
+        if (type === "supervisor") {
+          if (credentials.password === SUPERVISOR_PASSWORD) {
+            setCurrentUser({ type: "supervisor" });
+            setView("supervisor");
+          } else {
+            alert("Incorrect supervisor password");
+          }
+        } else {
+          const user = staff.find(
+            (s) => s.name.toLowerCase() === credentials.name.toLowerCase() && s.password === credentials.password
+          );
+          if (user) {
+            setCurrentUser(user);
+            setActiveRole(user.roles[0]);
+            setView("staff");
+          } else {
+            alert("Incorrect name or password");
+          }
+        }
+      };
+
+      const handleLogout = () => {
+        setCurrentUser(null);
+        setActiveRole(null);
+        setView("login");
+      };
+
+      const toggleKPI = (staffId, role, kpiIndex, value) => {
+        setDailyProgress((prev) => {
+          const key = `${staffId}-${role}-${kpiIndex}`;
+          if (typeof value === 'number') {
+            return { ...prev, [key]: value };
+          }
+          const current = prev[key] || false;
+          return { ...prev, [key]: typeof current === 'number' ? 0 : !current };
+        });
+      };
+
+      const addKPI = (staffId, role, kpiData) => {
+        setKpis((prev) => ({
+          ...prev,
+          [staffId]: {
+            ...prev[staffId],
+            [role]: [...(prev[staffId]?.[role] || []), kpiData],
+          },
+        }));
+      };
+
+      const updateKPI = (staffId, role, index, updatedKPI) => {
+        setKpis((prev) => ({
+          ...prev,
+          [staffId]: {
+            ...prev[staffId],
+            [role]: prev[staffId][role].map((kpi, i) => i === index ? updatedKPI : kpi),
+          },
+        }));
+      };
+
+      const removeKPI = (staffId, role, index) => {
+        if (!confirm("Delete this KPI? This action cannot be undone.")) return;
+        setKpis((prev) => ({
+          ...prev,
+          [staffId]: {
+            ...prev[staffId],
+            [role]: prev[staffId][role].filter((_, i) => i !== index),
+          },
+        }));
+      };
+
+      const addStaffMember = (name, roles, password) => {
+        const newId = String(Date.now());
+        const newStaff = { id: newId, name, roles, password };
+        setStaff((prev) => [...prev, newStaff]);
+        
+        const newKpis = {};
+        roles.forEach((role) => {
+          newKpis[role] = DEFAULT_KPIS_BY_ROLE[role] || [];
+        });
+        setKpis((prev) => ({ ...prev, [newId]: newKpis }));
+      };
+
+      const updateStaffMember = (staffId, updates) => {
+        setStaff((prev) => prev.map(s => s.id === staffId ? { ...s, ...updates } : s));
+      };
+
+      const deleteStaffMember = (staffId) => {
+        if (!confirm("Delete this staff member? They can be restored from the archive.")) return;
+        const member = staff.find(s => s.id === staffId);
+        setDeletedStaff(prev => [...prev, { ...member, deletedAt: new Date().toISOString() }]);
+        setStaff(prev => prev.filter(s => s.id !== staffId));
+      };
+
+      const restoreStaffMember = (staffId) => {
+        const member = deletedStaff.find(s => s.id === staffId);
+        const { deletedAt, ...cleanMember } = member;
+        setStaff(prev => [...prev, cleanMember]);
+        setDeletedStaff(prev => prev.filter(s => s.id !== staffId));
+      };
+
+      const setScore = (staffId, score) => {
+        const today = getTodayKey();
+        setScores((prev) => ({
+          ...prev,
+          [staffId]: { ...(prev[staffId] || {}), [today]: score },
+        }));
+      };
+
+      const addRemark = (staffId, text) => {
+        const today = getTodayKey();
+        setRemarks((prev) => ({
+          ...prev,
+          [staffId]: [...(prev[staffId] || []), { date: today, text }],
+        }));
+      };
+
+      const deleteRemark = (staffId, remarkIndex) => {
+        if (!confirm("Delete this remark?")) return;
+        setRemarks((prev) => ({
+          ...prev,
+          [staffId]: prev[staffId].filter((_, i) => i !== remarkIndex),
+        }));
+      };
+
+      if (view === "login") {
+        return <LoginScreen onLogin={handleLogin} />;
+      }
+
+      if (view === "staff") {
+        return (
+          <StaffDashboard
+            user={currentUser}
+            activeRole={activeRole}
+            setActiveRole={setActiveRole}
+            kpis={kpis[currentUser.id]?.[activeRole] || []}
+            dailyProgress={dailyProgress}
+            toggleKPI={toggleKPI}
+            addKPI={addKPI}
+            remarks={remarks[currentUser.id] || []}
+            scores={scores[currentUser.id] || {}}
+            onLogout={handleLogout}
+          />
+        );
+      }
+
+      return (
+        <SupervisorDashboard
+          staff={staff}
+          kpis={kpis}
+          dailyProgress={dailyProgress}
+          history={history}
+          scores={scores}
+          remarks={remarks}
+          deletedStaff={deletedStaff}
+          addKPI={addKPI}
+          updateKPI={updateKPI}
+          removeKPI={removeKPI}
+          setScore={setScore}
+          addRemark={addRemark}
+          deleteRemark={deleteRemark}
+          addStaffMember={addStaffMember}
+          updateStaffMember={updateStaffMember}
+          deleteStaffMember={deleteStaffMember}
+          restoreStaffMember={restoreStaffMember}
+          onLogout={handleLogout}
+          exportData={() => exportDataAsJSON({ staff, kpis, dailyProgress, history, scores, remarks, deletedStaff })}
+          generateReport={generateExcelReport}
+        />
+      );
+    }
+
+    // ============================================================
+    // LOGIN SCREEN
+    // ============================================================
+
+    function LoginScreen({ onLogin }) {
+      const [mode, setMode] = useState("staff");
+      const [name, setName] = useState("");
+      const [password, setPassword] = useState("");
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (mode === "supervisor") {
+          onLogin("supervisor", { password });
+        } else {
+          onLogin("staff", { name, password });
+        }
+      };
+
+      return (
+        <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
+          <div className="glass" style={{ padding: "3rem", maxWidth: "28rem", width: "100%" }}>
+            <div className="text-center mb-6">
+              <h1 className="heading text-4xl gold-text" style={{ fontWeight: 900, marginBottom: "0.5rem" }}>
+                CITIP
+              </h1>
+              <p className="text-emerald text-xs" style={{ fontWeight: 500, letterSpacing: "0.1em" }}>
+                CEOS IN TRAINING INTERNSHIP PROGRAM
+              </p>
+              <div className="divider"></div>
+              <p className="text-slate text-xs">v2.0 - Enhanced Edition</p>
+            </div>
+
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={() => setMode("staff")}
+                className={mode === "staff" ? "tab-button active" : "tab-button"}
+                style={{ flex: 1 }}
+              >
+                Staff Login
+              </button>
+              <button
+                onClick={() => setMode("supervisor")}
+                className={mode === "supervisor" ? "tab-button active" : "tab-button"}
+                style={{ flex: 1 }}
+              >
+                Supervisor
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              {mode === "staff" && (
+                <div className="mb-4">
+                  <label className="text-emerald text-sm mb-2" style={{ display: "block", fontWeight: 500 }}>
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="input-field"
+                    placeholder="Enter your name"
+                    required
+                  />
+                </div>
+              )}
+
+              <div className="mb-4">
+                <label className="text-emerald text-sm mb-2" style={{ display: "block", fontWeight: 500 }}>
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-field"
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+
+              <button type="submit" className="btn-primary" style={{ width: "100%", padding: "0.75rem", fontSize: "1.125rem", borderRadius: "0.5rem" }}>
+                ACCESS PLATFORM
+              </button>
+            </form>
+
+            <p className="text-center text-slate text-xs mt-6">
+              KPI Tracking System — CITIP 2025
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    // ============================================================
+    // STAFF DASHBOARD
+    // ============================================================
+
+    function StaffDashboard({ user, activeRole, setActiveRole, kpis, dailyProgress, toggleKPI, addKPI, remarks, scores, onLogout }) {
+      const [showAddTask, setShowAddTask] = useState(false);
+      const [newTaskText, setNewTaskText] = useState("");
+      const [newTaskType, setNewTaskType] = useState("recurring");
+      const [newTaskTarget, setNewTaskTarget] = useState("");
+
+      const today = getTodayKey();
+      
+      const calculateProgress = () => {
+        let totalTasks = 0;
+        let completedTasks = 0;
+
+        kpis.forEach((kpi, i) => {
+          const key = `${user.id}-${activeRole}-${i}`;
+          const progress = dailyProgress[key];
+          
+          if (kpi.target) {
+            totalTasks += kpi.target;
+            completedTasks += (typeof progress === 'number' ? progress : 0);
+          } else {
+            totalTasks += 1;
+            if (progress === true || (typeof progress === 'number' && progress > 0)) {
+              completedTasks += 1;
+            }
+          }
+        });
+
+        return totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      };
+
+      const progress = calculateProgress();
+      const todayScore = scores[today];
+
+      const handleAddTask = () => {
+        if (!newTaskText.trim()) return;
+        const kpiData = {
+          text: newTaskText,
+          type: newTaskType,
+          target: newTaskTarget ? parseInt(newTaskTarget) : undefined,
+          addedBy: "staff",
+          dueDate: null
+        };
+        addKPI(user.id, activeRole, kpiData);
+        setNewTaskText("");
+        setNewTaskTarget("");
+        setShowAddTask(false);
+      };
+
+      return (
+        <div className="container" style={{ minHeight: "100vh", paddingTop: "2rem", paddingBottom: "2rem" }}>
+          <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
+            <div className="glass" style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
+              <div className="flex-between mb-4">
+                <div>
+                  <h1 className="heading text-3xl gold-text" style={{ fontWeight: 900 }}>{user.name}</h1>
+                  <p className="text-emerald text-sm mt-1">{activeRole}</p>
+                </div>
+                <button onClick={onLogout} className="btn-secondary">
+                  Logout
+                </button>
+              </div>
+
+              {user.roles.length > 1 && (
+                <div className="flex gap-2 mb-4" style={{ flexWrap: "wrap" }}>
+                  {user.roles.map((role) => (
+                    <span
+                      key={role}
+                      onClick={() => setActiveRole(role)}
+                      className={activeRole === role ? "role-badge active" : "role-badge"}
+                    >
+                      {role}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="mb-4">
+                <div className="flex-between text-sm mb-2">
+                  <span className="text-emerald" style={{ fontWeight: 500 }}>Today's Progress</span>
+                  <span className="gold-text" style={{ fontWeight: 700 }}>{progress}%</span>
+                </div>
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+                </div>
+              </div>
+
+              {todayScore && (
+                <div className="card" style={{ border: "1px solid rgba(16, 185, 129, 0.3)" }}>
+                  <p className="text-emerald text-sm">
+                    Today's Score: <span className="gold-text" style={{ fontWeight: 700, fontSize: "1.125rem" }}>{todayScore}/10</span>
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="glass" style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
+              <div className="flex-between mb-4">
+                <h2 className="heading text-2xl gold-text" style={{ fontWeight: 700 }}>Daily KPIs</h2>
+                <button onClick={() => setShowAddTask(!showAddTask)} className="btn-success">
+                  {showAddTask ? "Cancel" : "+ Add Task"}
+                </button>
+              </div>
+
+              {showAddTask && (
+                <div className="card mb-4">
+                  <input
+                    type="text"
+                    value={newTaskText}
+                    onChange={(e) => setNewTaskText(e.target.value)}
+                    placeholder="Task description..."
+                    className="input-field mb-2"
+                  />
+                  <div className="flex gap-2 mb-2">
+                    <select value={newTaskType} onChange={(e) => setNewTaskType(e.target.value)} className="select-field">
+                      <option value="recurring">Daily (Recurring)</option>
+                      <option value="oneoff">One-Time Task</option>
+                    </select>
+                    <input
+                      type="number"
+                      value={newTaskTarget}
+                      onChange={(e) => setNewTaskTarget(e.target.value)}
+                      placeholder="Target (optional)"
+                      className="input-field"
+                      style={{ width: "150px" }}
+                    />
+                  </div>
+                  <button onClick={handleAddTask} className="btn-primary" style={{ width: "100%", padding: "0.5rem" }}>
+                    Add Task
+                  </button>
+                </div>
+              )}
+
+              <div>
+                {kpis.length === 0 ? (
+                  <p className="text-slate text-center" style={{ padding: "2rem 0" }}>No KPIs assigned yet</p>
+                ) : (
+                  kpis.map((kpi, index) => {
+                    const key = `${user.id}-${activeRole}-${index}`;
+                    const progressValue = dailyProgress[key];
+                    const isChecked = progressValue === true;
+                    const counterValue = typeof progressValue === 'number' ? progressValue : 0;
+                    const hasTarget = kpi.target && kpi.target > 1;
+
+                    return (
+                      <div key={index} className={isChecked ? "kpi-item completed" : "kpi-item"}>
+                        {!hasTarget && (
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleKPI(user.id, activeRole, index)}
+                            className="checkbox"
+                          />
+                        )}
+                        
+                        <div style={{ flex: 1 }}>
+                          <span className="kpi-text text-white">
+                            {kpi.text}
+                            {kpi.addedBy === "staff" && <span className="text-emerald text-xs"> (You added this)</span>}
+                          </span>
+                          <div className="flex gap-2 mt-1">
+                            <span className={kpi.type === "recurring" ? "badge badge-recurring" : "badge badge-oneoff"}>
+                              {kpi.type === "recurring" ? "Daily" : "One-Time"}
+                            </span>
+                            {kpi.dueDate && (
+                              <span className={isOverdue(kpi.dueDate) ? "badge badge-overdue" : "badge badge-oneoff"}>
+                                Due: {kpi.dueDate}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {hasTarget && (
+                          <div className="flex gap-2" style={{ alignItems: "center" }}>
+                            <input
+                              type="number"
+                              min="0"
+                              max={kpi.target}
+                              value={counterValue}
+                              onChange={(e) => toggleKPI(user.id, activeRole, index, Math.min(parseInt(e.target.value) || 0, kpi.target))}
+                              className="counter-input"
+                            />
+                            <span className="text-slate text-sm">/ {kpi.target}</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
+            {remarks.length > 0 && (
+              <div className="glass" style={{ padding: "1.5rem" }}>
+                <h2 className="heading text-2xl gold-text mb-4" style={{ fontWeight: 700 }}>Supervisor Remarks</h2>
+                <div>
+                  {remarks.slice(-5).reverse().map((r, i) => (
+                    <div key={i} className="remark-item">
+                      <p className="text-white mb-2">{r.text}</p>
+                      <p className="text-xs text-slate">{r.date}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ============================================================
+    // SUPERVISOR DASHBOARD
+    // ============================================================
+
+    function SupervisorDashboard({ 
+      staff, kpis, dailyProgress, history, scores, remarks, deletedStaff,
+      addKPI, updateKPI, removeKPI, setScore, addRemark, deleteRemark,
+      addStaffMember, updateStaffMember, deleteStaffMember, restoreStaffMember,
+      onLogout, exportData, generateReport
+    }) {
+      const [selectedStaff, setSelectedStaff] = useState(null);
+      const [viewMode, setViewMode] = useState("overview");
+      const [showReportModal, setShowReportModal] = useState(false);
+      const [reportTimeRange, setReportTimeRange] = useState("weekly");
+      const [reportStaffIds, setReportStaffIds] = useState([]);
+
+      const getProgress = (staffId, role) => {
+        const staffKpis = kpis[staffId]?.[role] || [];
+        if (staffKpis.length === 0) return 0;
+        
+        let totalTasks = 0;
+        let completedTasks = 0;
+
+        staffKpis.forEach((kpi, i) => {
+          const key = `${staffId}-${role}-${i}`;
+          const progress = dailyProgress[key];
+          
+          if (kpi.target) {
+            totalTasks += kpi.target;
+            completedTasks += (typeof progress === 'number' ? progress : 0);
+          } else {
+            totalTasks += 1;
+            if (progress === true || (typeof progress === 'number' && progress > 0)) {
+              completedTasks += 1;
+            }
+          }
+        });
+
+        return totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      };
+
+      if (viewMode === "detail" && selectedStaff) {
+        return (
+          <StaffDetailView
+            staff={selectedStaff}
+            kpis={kpis[selectedStaff.id] || {}}
+            dailyProgress={dailyProgress}
+            history={history}
+            scores={scores[selectedStaff.id] || {}}
+            remarks={remarks[selectedStaff.id] || []}
+            getProgress={getProgress}
+            addKPI={addKPI}
+            updateKPI={updateKPI}
+            removeKPI={removeKPI}
+            setScore={setScore}
+            addRemark={addRemark}
+            deleteRemark={deleteRemark}
+            updateStaffMember={updateStaffMember}
+            deleteStaffMember={deleteStaffMember}
+            onBack={() => setViewMode("overview")}
+          />
+        );
+      }
+
+      if (viewMode === "add") {
+        return (
+          <AddStaffForm
+            addStaffMember={addStaffMember}
+            onBack={() => setViewMode("overview")}
+          />
+        );
+      }
+
+      if (viewMode === "archive") {
+        return (
+          <ArchiveView
+            deletedStaff={deletedStaff}
+            restoreStaffMember={restoreStaffMember}
+            onBack={() => setViewMode("overview")}
+          />
+        );
+      }
+
+      return (
+        <div className="container" style={{ minHeight: "100vh", paddingTop: "2rem", paddingBottom: "2rem" }}>
+          <div className="glass" style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
+            <div className="flex-between mb-4">
+              <div>
+                <h1 className="heading text-4xl gold-text" style={{ fontWeight: 900 }}>Supervisor Dashboard</h1>
+                <p className="text-emerald text-sm mt-1">CITIP Performance Management v2.0</p>
+              </div>
+              <button onClick={onLogout} className="btn-secondary">
+                Logout
+              </button>
+            </div>
+
+            <div className="action-buttons mt-6">
+              <button onClick={() => setViewMode("overview")} className={viewMode === "overview" ? "tab-button active" : "tab-button"}>
+                Overview
+              </button>
+              <button onClick={() => setViewMode("add")} className="tab-button">
+                + Add Staff
+              </button>
+              <button onClick={() => setShowReportModal(true)} className="btn-success">
+                📊 Generate Report
+              </button>
+              <button onClick={exportData} className="btn-secondary">
+                💾 Backup Data
+              </button>
+              <button onClick={() => setViewMode("archive")} className="btn-secondary">
+                🗄️ Archive ({deletedStaff.length})
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-2">
+            {staff.map((person) => {
+              const avgProgress = person.roles.reduce((sum, role) => sum + getProgress(person.id, role), 0) / person.roles.length;
+              const todayScore = scores[person.id]?.[getTodayKey()];
+
+              return (
+                <div
+                  key={person.id}
+                  className="glass staff-card"
+                  style={{ padding: "1.25rem", cursor: "pointer" }}
+                  onClick={() => {
+                    setSelectedStaff(person);
+                    setViewMode("detail");
+                  }}
+                >
+                  <h3 className="heading text-xl gold-text mb-2" style={{ fontWeight: 700 }}>{person.name}</h3>
+                  <p className="text-emerald text-sm mb-4">{person.roles.join(" + ")}</p>
+
+                  <div className="mb-4">
+                    <div className="flex-between text-xs mb-2">
+                      <span className="text-slate">Today's Progress</span>
+                      <span className="text-emerald" style={{ fontWeight: 700 }}>{Math.round(avgProgress)}%</span>
+                    </div>
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{ width: `${avgProgress}%` }}></div>
+                    </div>
+                  </div>
+
+                  {todayScore && (
+                    <div className="card text-center">
+                      <span className="text-xs text-slate">Score: </span>
+                      <span className="gold-text" style={{ fontWeight: 700 }}>{todayScore}/10</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {showReportModal && (
+            <ReportModal
+              staff={staff}
+              reportTimeRange={reportTimeRange}
+              setReportTimeRange={setReportTimeRange}
+              reportStaffIds={reportStaffIds}
+              setReportStaffIds={setReportStaffIds}
+              onGenerate={() => {
+                const ids = reportStaffIds.length > 0 ? reportStaffIds : staff.map(s => s.id);
+                generateReport(staff, kpis, dailyProgress, history, scores, remarks, reportTimeRange, ids);
+                setShowReportModal(false);
+              }}
+              onClose={() => setShowReportModal(false)}
+            />
+          )}
+        </div>
+      );
+    }
+
+    // ============================================================
+    // REPORT MODAL
+    // ============================================================
+
+    function ReportModal({ staff, reportTimeRange, setReportTimeRange, reportStaffIds, setReportStaffIds, onGenerate, onClose }) {
+      const toggleStaff = (id) => {
+        setReportStaffIds(prev =>
+          prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+      };
+
+      const selectAll = () => setReportStaffIds(staff.map(s => s.id));
+      const clearAll = () => setReportStaffIds([]);
+
+      return (
+        <div className="modal-overlay" onClick={onClose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2 className="heading text-2xl gold-text mb-4" style={{ fontWeight: 700 }}>Generate Excel Report</h2>
+            
+            <div className="mb-4">
+              <label className="text-emerald text-sm mb-2" style={{ display: "block", fontWeight: 500 }}>Time Range</label>
+              <select value={reportTimeRange} onChange={(e) => setReportTimeRange(e.target.value)} className="select-field">
+                <option value="daily">Today</option>
+                <option value="weekly">Last 7 Days</option>
+                <option value="monthly">Last 30 Days</option>
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <div className="flex-between mb-2">
+                <label className="text-emerald text-sm" style={{ fontWeight: 500 }}>Select Staff</label>
+                <div className="flex gap-2">
+                  <button onClick={selectAll} className="text-emerald text-xs" style={{ textDecoration: "underline" }}>All</button>
+                  <button onClick={clearAll} className="text-slate text-xs" style={{ textDecoration: "underline" }}>Clear</button>
+                </div>
+              </div>
+              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+                {staff.map(s => (
+                  <label key={s.id} className="flex gap-2 mb-2" style={{ alignItems: "center", cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={reportStaffIds.includes(s.id)}
+                      onChange={() => toggleStaff(s.id)}
+                      className="checkbox"
+                    />
+                    <span className="text-white text-sm">{s.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <button onClick={onGenerate} className="btn-primary" style={{ flex: 1, padding: "0.75rem" }}>
+                Download Excel
+              </button>
+              <button onClick={onClose} className="btn-secondary" style={{ padding: "0.75rem" }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ============================================================
+    // STAFF DETAIL VIEW
+    // ============================================================
+
+    function StaffDetailView({ 
+      staff, kpis, dailyProgress, history, scores, remarks, getProgress,
+      addKPI, updateKPI, removeKPI, setScore, addRemark, deleteRemark,
+      updateStaffMember, deleteStaffMember, onBack
+    }) {
+      const [selectedRole, setSelectedRole] = useState(staff.roles[0]);
+      const [newKPI, setNewKPI] = useState("");
+      const [newKPIType, setNewKPIType] = useState("recurring");
+      const [newKPITarget, setNewKPITarget] = useState("");
+      const [newKPIDueDate, setNewKPIDueDate] = useState("");
+      const [newScore, setNewScore] = useState("");
+      const [newRemark, setNewRemark] = useState("");
+      const [editingStaff, setEditingStaff] = useState(false);
+      const [editName, setEditName] = useState(staff.name);
+      const [editPassword, setEditPassword] = useState(staff.password);
+      const [editRoles, setEditRoles] = useState(staff.roles);
+      const [newRoleName, setNewRoleName] = useState("");
+
+      const today = getTodayKey();
+      const todayScore = scores[today];
+
+      const handleAddKPI = () => {
+        if (!newKPI.trim()) return;
+        const kpiData = {
+          text: newKPI,
+          type: newKPIType,
+          target: newKPITarget ? parseInt(newKPITarget) : undefined,
+          dueDate: newKPIDueDate || null,
+        };
+        addKPI(staff.id, selectedRole, kpiData);
+        setNewKPI("");
+        setNewKPITarget("");
+        setNewKPIDueDate("");
+      };
+
+      const handleUpdateStaff = () => {
+        updateStaffMember(staff.id, {
+          name: editName,
+          password: editPassword,
+          roles: editRoles
+        });
+        setEditingStaff(false);
+      };
+
+      const handleAddRole = () => {
+        if (!newRoleName.trim()) return;
+        const updatedRoles = [...editRoles, newRoleName.trim()];
+        setEditRoles(updatedRoles);
+        setNewRoleName("");
+      };
+
+      const handleRemoveRole = (role) => {
+        setEditRoles(editRoles.filter(r => r !== role));
+      };
+
+      return (
+        <div className="container" style={{ minHeight: "100vh", paddingTop: "2rem", paddingBottom: "2rem" }}>
+          <button onClick={onBack} className="btn-secondary mb-4">
+            ← Back to Overview
+          </button>
+
+          <div className="glass" style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
+            <div className="flex-between mb-4">
+              <div>
+                <h2 className="heading text-3xl gold-text mb-2" style={{ fontWeight: 900 }}>{staff.name}</h2>
+                <p className="text-emerald">{staff.roles.join(" + ")}</p>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setEditingStaff(!editingStaff)} className="btn-secondary">
+                  {editingStaff ? "Cancel Edit" : "✏️ Edit Staff"}
+                </button>
+                <button onClick={() => deleteStaffMember(staff.id)} className="btn-danger">
+                  🗑️ Delete
+                </button>
+              </div>
+            </div>
+
+            {editingStaff && (
+              <div className="card mb-4">
+                <h3 className="text-white mb-3" style={{ fontWeight: 600 }}>Edit Staff Member</h3>
+                <div className="mb-3">
+                  <label className="text-emerald text-sm mb-1" style={{ display: "block" }}>Name</label>
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="text-emerald text-sm mb-1" style={{ display: "block" }}>Password</label>
+                  <input
+                    type="text"
+                    value={editPassword}
+                    onChange={(e) => setEditPassword(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="text-emerald text-sm mb-2" style={{ display: "block" }}>Roles</label>
+                  <div className="flex gap-2 mb-2" style={{ flexWrap: "wrap" }}>
+                    {editRoles.map(role => (
+                      <span key={role} className="role-badge active" style={{ cursor: "default" }}>
+                        {role}
+                        <button
+                          onClick={() => handleRemoveRole(role)}
+                          style={{ marginLeft: "0.5rem", background: "none", border: "none", color: "white", cursor: "pointer" }}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newRoleName}
+                      onChange={(e) => setNewRoleName(e.target.value)}
+                      placeholder="New role name..."
+                      className="input-field"
+                      style={{ flex: 1 }}
+                    />
+                    <button onClick={handleAddRole} className="btn-success">
+                      Add Role
+                    </button>
+                  </div>
+                </div>
+                <button onClick={handleUpdateStaff} className="btn-primary" style={{ width: "100%", padding: "0.5rem" }}>
+                  Save Changes
+                </button>
+              </div>
+            )}
+
+            <div className="flex gap-2 mb-6" style={{ flexWrap: "wrap" }}>
+              {staff.roles.map((role) => (
+                <span
+                  key={role}
+                  onClick={() => setSelectedRole(role)}
+                  className={selectedRole === role ? "role-badge active" : "role-badge"}
+                >
+                  {role}
+                </span>
+              ))}
+            </div>
+
+            <div className="card mb-6">
+              <div className="flex-between mb-2">
+                <span className="text-emerald" style={{ fontWeight: 500 }}>Today's Progress - {selectedRole}</span>
+                <span className="gold-text text-xl" style={{ fontWeight: 700 }}>{getProgress(staff.id, selectedRole)}%</span>
+              </div>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${getProgress(staff.id, selectedRole)}%` }}></div>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg text-white mb-4" style={{ fontWeight: 700 }}>KPIs</h3>
+              <div>
+                {(kpis[selectedRole] || []).map((kpi, i) => {
+                  const key = `${staff.id}-${selectedRole}-${i}`;
+                  const progressValue = dailyProgress[key];
+                  const isChecked = progressValue === true;
+                  const counterValue = typeof progressValue === 'number' ? progressValue : 0;
+
+                  return (
+                    <div key={i} className="flex gap-4 card" style={{ alignItems: "center", marginBottom: "0.5rem" }}>
+                      {kpi.target ? (
+                        <span className="text-emerald" style={{ fontWeight: 700 }}>{counterValue}/{kpi.target}</span>
+                      ) : (
+                        <input type="checkbox" checked={isChecked} readOnly className="checkbox" />
+                      )}
+                      
+                      <div style={{ flex: 1 }}>
+                        <span className={isChecked ? "text-slate" : "text-white"} style={{ textDecoration: isChecked ? "line-through" : "none" }}>
+                          {kpi.text}
+                        </span>
+                        <div className="flex gap-2 mt-1">
+                          <span className={kpi.type === "recurring" ? "badge badge-recurring" : "badge badge-oneoff"}>
+                            {kpi.type === "recurring" ? "Daily" : "One-Time"}
+                          </span>
+                          {kpi.dueDate && (
+                            <span className={isOverdue(kpi.dueDate) ? "badge badge-overdue" : "badge badge-oneoff"}>
+                              Due: {kpi.dueDate}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <button onClick={() => removeKPI(staff.id, selectedRole, i)} className="btn-danger" style={{ padding: "0.25rem 0.75rem", fontSize: "0.75rem" }}>
+                        Remove
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="card mt-4">
+                <h4 className="text-white mb-2" style={{ fontWeight: 600 }}>Add New KPI</h4>
+                <textarea
+                  value={newKPI}
+                  onChange={(e) => setNewKPI(e.target.value)}
+                  placeholder="KPI description..."
+                  className="textarea-field mb-2"
+                  style={{ minHeight: "60px" }}
+                />
+                <div className="grid" style={{ gridTemplateColumns: "1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                  <select value={newKPIType} onChange={(e) => setNewKPIType(e.target.value)} className="select-field">
+                    <option value="recurring">Daily (Recurring)</option>
+                    <option value="oneoff">One-Time</option>
+                  </select>
+                  <input
+                    type="number"
+                    value={newKPITarget}
+                    onChange={(e) => setNewKPITarget(e.target.value)}
+                    placeholder="Target (e.g., 3)"
+                    className="input-field"
+                  />
+                  <input
+                    type="date"
+                    value={newKPIDueDate}
+                    onChange={(e) => setNewKPIDueDate(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                <button onClick={handleAddKPI} className="btn-primary" style={{ width: "100%", padding: "0.5rem" }}>
+                  Add KPI to {selectedRole}
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg text-white mb-4" style={{ fontWeight: 700 }}>Performance Score</h3>
+              <div className="flex gap-2" style={{ alignItems: "center" }}>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={newScore}
+                  onChange={(e) => setNewScore(e.target.value)}
+                  placeholder="1-10"
+                  className="input-field"
+                  style={{ width: "8rem", textAlign: "center" }}
+                />
+                <button
+                  onClick={() => {
+                    if (newScore && newScore >= 1 && newScore <= 10) {
+                      setScore(staff.id, parseInt(newScore));
+                      setNewScore("");
+                    }
+                  }}
+                  className="btn-primary"
+                  style={{ padding: "0.5rem 1.5rem", borderRadius: "0.5rem" }}
+                >
+                  Set Score
+                </button>
+                {todayScore && (
+                  <span className="text-emerald" style={{ marginLeft: "1rem" }}>
+                    Today: <span className="gold-text text-xl" style={{ fontWeight: 700 }}>{todayScore}/10</span>
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg text-white mb-4" style={{ fontWeight: 700 }}>Remarks</h3>
+              <div className="flex gap-2 mb-4">
+                <input
+                  type="text"
+                  value={newRemark}
+                  onChange={(e) => setNewRemark(e.target.value)}
+                  placeholder="Add a remark..."
+                  className="input-field"
+                  style={{ flex: 1 }}
+                />
+                <button
+                  onClick={() => {
+                    if (newRemark.trim()) {
+                      addRemark(staff.id, newRemark.trim());
+                      setNewRemark("");
+                    }
+                  }}
+                  className="btn-primary"
+                  style={{ padding: "0.5rem 1.5rem", borderRadius: "0.5rem" }}
+                >
+                  Add
+                </button>
+              </div>
+
+              <div style={{ maxHeight: "16rem", overflowY: "auto" }}>
+                {remarks.slice().reverse().map((r, i) => (
+                  <div key={i} className="remark-item" style={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
+                    <div style={{ flex: 1 }}>
+                      <p className="text-white text-sm">{r.text}</p>
+                      <p className="text-xs text-slate mt-1">{r.date}</p>
+                    </div>
+                    <button
+                      onClick={() => deleteRemark(staff.id, remarks.length - 1 - i)}
+                      className="btn-danger"
+                      style={{ padding: "0.25rem 0.5rem", fontSize: "0.75rem", marginLeft: "1rem" }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ============================================================
+    // ADD STAFF FORM
+    // ============================================================
+
+    function AddStaffForm({ addStaffMember, onBack }) {
+      const [name, setName] = useState("");
+      const [password, setPassword] = useState("123456");
+      const [selectedRoles, setSelectedRoles] = useState([]);
+      const [newRoleName, setNewRoleName] = useState("");
+
+      const handleAddRole = () => {
+        if (!newRoleName.trim()) return;
+        setSelectedRoles([...selectedRoles, newRoleName.trim()]);
+        setNewRoleName("");
+      };
+
+      const handleRemoveRole = (role) => {
+        setSelectedRoles(selectedRoles.filter(r => r !== role));
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (name.trim() && selectedRoles.length > 0) {
+          addStaffMember(name.trim(), selectedRoles, password);
+          setName("");
+          setSelectedRoles([]);
+          onBack();
+        }
+      };
+
+      return (
+        <div className="container" style={{ minHeight: "100vh", paddingTop: "2rem", paddingBottom: "2rem" }}>
+          <div className="glass" style={{ padding: "1.5rem", maxWidth: "48rem", margin: "0 auto" }}>
+            <button onClick={onBack} className="btn-secondary mb-6">
+              ← Back
+            </button>
+
+            <h2 className="heading text-2xl gold-text mb-6" style={{ fontWeight: 700 }}>Add New Staff Member</h2>
+
+            <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <label className="text-emerald text-sm mb-2" style={{ display: "block", fontWeight: 500 }}>Name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="input-field"
+                  placeholder="Enter staff name"
+                  required
+                />
+              </div>
+
+              <div className="mb-6">
+                <label className="text-emerald text-sm mb-2" style={{ display: "block", fontWeight: 500 }}>Password</label>
+                <input
+                  type="text"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-field"
+                  placeholder="Set password"
+                  required
+                />
+              </div>
+
+              <div className="mb-6">
+                <label className="text-emerald text-sm mb-3" style={{ display: "block", fontWeight: 500 }}>
+                  Roles
+                </label>
+                
+                {selectedRoles.length > 0 && (
+                  <div className="flex gap-2 mb-3" style={{ flexWrap: "wrap" }}>
+                    {selectedRoles.map((role, i) => (
+                      <span key={i} className="role-badge active" style={{ cursor: "default" }}>
+                        {role}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveRole(role)}
+                          style={{ marginLeft: "0.5rem", background: "none", border: "none", color: "white", cursor: "pointer" }}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newRoleName}
+                    onChange={(e) => setNewRoleName(e.target.value)}
+                    placeholder="Type role name (e.g., 'Copywriter', 'SEO Specialist')..."
+                    className="input-field"
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddRole}
+                    className="btn-success"
+                    style={{ padding: "0.75rem 1.5rem" }}
+                  >
+                    Add Role
+                  </button>
+                </div>
+                <p className="text-slate text-xs mt-2">Add custom roles by typing them above</p>
+              </div>
+
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={selectedRoles.length === 0}
+                style={{ width: "100%", padding: "0.75rem", fontSize: "1.125rem", borderRadius: "0.5rem" }}
+              >
+                Add Staff Member
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // ============================================================
+    // ARCHIVE VIEW
+    // ============================================================
+
+    function ArchiveView({ deletedStaff, restoreStaffMember, onBack }) {
+      return (
+        <div className="container" style={{ minHeight: "100vh", paddingTop: "2rem", paddingBottom: "2rem" }}>
+          <div className="glass" style={{ padding: "1.5rem" }}>
+            <button onClick={onBack} className="btn-secondary mb-6">
+              ← Back to Overview
+            </button>
+
+            <h2 className="heading text-2xl gold-text mb-6" style={{ fontWeight: 700 }}>Archived Staff Members</h2>
+
+            {deletedStaff.length === 0 ? (
+              <p className="text-slate text-center" style={{ padding: "3rem 0" }}>No archived staff members</p>
+            ) : (
+              <div className="grid grid-2">
+                {deletedStaff.map(person => (
+                  <div key={person.id} className="card">
+                    <h3 className="text-white mb-2" style={{ fontWeight: 600 }}>{person.name}</h3>
+                    <p className="text-slate text-sm mb-2">{person.roles.join(" + ")}</p>
+                    <p className="text-xs text-slate mb-3">Deleted: {new Date(person.deletedAt).toLocaleDateString()}</p>
+                    <button
+                      onClick={() => restoreStaffMember(person.id)}
+                      className="btn-success"
+                      style={{ width: "100%", padding: "0.5rem" }}
+                    >
+                      Restore
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ============================================================
+    // RENDER
+    // ============================================================
+
+    ReactDOM.render(<App />, document.getElementById('app'));
+  </script>
+</body>
+</html>
